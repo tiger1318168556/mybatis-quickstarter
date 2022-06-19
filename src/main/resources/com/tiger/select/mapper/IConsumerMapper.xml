@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiger.select.mapper.IConsumerMapper">
+    <resultMap id="consumerType" type="consumer">
+        <id property="consumerid" column="consumerid"></id>
+        <result property="consumername" column="consumername"></result>
+        <result property="consumerpwd" column="consumerpwd"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="orderList" ofType="orders">
+            <id property="orderid" column="oid"></id>
+            <id property="ordertime" column="ordertime"></id>
+            <id property="total" column="total"></id>
+
+
+        </collection>
+
+
+
+    </resultMap>
+<select id="findAll" resultMap="consumerType">
+    select c.*,o.orderid,o.ordertime,o.orderid oid,o.total,o.consumerid cid
+    from consumer c left join orders o on o.consumerid = c.consumerid
+</select>
+</mapper>

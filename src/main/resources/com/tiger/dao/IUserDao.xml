@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiger.dao.IUserDao">
+    <!--sql的唯一标识：namespace.id 来组成:statementId-->
+    <!--抽取mysql 片段-->
+    <resultMap id="userRoleMap" type="user">
+        <!--外键-->
+        <result property="id" column="id"></result>
+        <result property="username" column="username"></result>
+        <collection property="roleList" ofType="role">
+            <result property="id" column="id"></result>
+            <result property="rolename" column="rolename"></result>
+        </collection>
+    </resultMap>
+    <sql id="selectUser">
+        select * from user
+    </sql>
+    <select id="findAll" resultType="UsER">
+        <include refid="selectUser"></include>
+    </select>
+    <insert id="saveUser" parameterType="user">
+        insert into user values(#{id},#{username})
+    </insert>
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username} where id =#{id}
+    </update>
+    <delete id="deleteUser" parameterType="int">
+        delete from user where id=#{id}
+    </delete>
+    <!--多条件组合查询 演示if-->
+    <select id="findByCondition" parameterType="user" resultType="user">
+        <include refid="selectUser"></include>
+        <!--去掉第一个and-->
+        <where>
+            <if test="id != null and id!='' ">
+                and id =#{id}
+            </if>
+
+            <if test="username != null ">
+                and username=#{username}
+            </if>
+        </where>
+
+    </select>
+    <!--多值查询 演示forEach-->
+    <select id="findByIds" parameterType="list" resultType="user">
+        <include refid="selectUser"></include>
+        <where>
+            <!--collection="array" 或者collection = “list” item:遍历出来的值-->
+            <foreach collection="array" open="id in(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+    <select id="findAllUserAndRole" resultMap="userRoleMap">
+        select u.* ,r.* from user u left join user_role ur on u.id=ur.userid left join role r on r.id  = ur.roleid
+    </select>
+</mapper>

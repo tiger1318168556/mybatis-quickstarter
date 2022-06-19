@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tiger.select.mapper.IOrderMapper">
+    <resultMap id="orderType" type="orders">
+        <result property="orderid" column="orderid"></result>
+        <result property="ordertime" column="ordertime"></result>
+        <result property="total" column="total"></result>
+        <!--一对一-->
+        <association property="consumer" javaType="consumer">
+            <result property="consumerid" column="consumerid"></result>
+            <result property="consumername" column="consumername"></result>
+            <result property="consumerpwd" column="consumerpwd"></result>
+            <result property="birthday" column="birthday"></result>
+        </association>
+    </resultMap>
+    <!--resultMap 手动配置实体属性与表字段的映射关系-->
+    <select id="findOrderAndConsumer" resultMap="orderType">
+        select * from orders o,consumer c where o.consumerid=c.consumerid
+    </select>
+</mapper>

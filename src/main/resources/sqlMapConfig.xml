@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--加载外部的properties文件-->
+    <properties resource="jdbc.properties"></properties>
+    <!--给实体类的全限定类名起别名-->
+    <typeAliases>
+        <!--给单独的实体起别名-->
+        <!--<typeAlias type="com.tiger.bean.User" alias="user"></typeAlias>-->
+        <!--批量起别名：该包下所有的类本身的类名：别名不区分大小写-->
+        <package name="com.tiger.bean"/>
+        <package name="com.tiger.select.bean"/>
+    </typeAliases>
+    <!--environments:运行环境-->
+<environments default="development">
+    <environment id="development">
+        <!--当前事务提交由JDBC进行管理-->
+        <transactionManager type="JDBC"></transactionManager>
+        <!--当前使用mybatis提供的连接池-->
+        <dataSource type="POOLED">
+            <property name="driver" value="${jdbc.Driver}"/>
+            <property name="url" value="${jdbc.url}"/>
+            <property name="username" value="${jdbc.username}"/>
+            <property name="password" value="${jdbc.password}"/>
+        </dataSource>
+    </environment>
+</environments>
+<!--引入映射配置文件-->
+    <mappers>
+        <!--<mapper resource="IUserDao.xml"></mapper>
+        <mapper resource="IOrderMapper.xml"></mapper>-->
+        <!--package方式-->
+      <!--  <package name="com.tiger.dao"/>
+        <package name="com.tiger.select.mapper"/>-->
+        <!--class方式-->
+        <mapper class="com.tiger.dao.IUserDao"></mapper>
+        <mapper class="com.tiger.select.mapper.IConsumerMapper"></mapper>
+        <mapper class="com.tiger.select.mapper.IOrderMapper"></mapper>
+    </mappers>
+
+</configuration>
