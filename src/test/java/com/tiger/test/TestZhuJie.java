@@ -1,7 +1,9 @@
 package com.tiger.test;
 
 import com.tiger.select.bean.Consumer;
+import com.tiger.select.bean.Orders;
 import com.tiger.select.mapper.IConsumerMapper;
+import com.tiger.select.mapper.IOrderMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -11,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author:zhanglihu
@@ -20,12 +23,14 @@ import java.io.InputStream;
  **/
 public class TestZhuJie {
     private IConsumerMapper consumerMapper;
+    private IOrderMapper orderMapper;
     @Before
     public void before() throws IOException {
         InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
         SqlSession sqlSession = sqlSessionFactory.openSession(true);
         consumerMapper = sqlSession.getMapper(IConsumerMapper.class);
+        orderMapper = sqlSession.getMapper(IOrderMapper.class);
     }
     @Test
     public void addConsumer(){
@@ -35,5 +40,14 @@ public class TestZhuJie {
         consumer.setConsumerpwd("123");
         consumer.setBirthday("1989-03-23");
         consumerMapper.addConsumer(consumer);
+    }
+
+    @Test//测试注解开发
+    public void test2OneToOneZhuJie() throws IOException {
+        List<Orders> orderAndConsumers = orderMapper.findOrderAndConsumers();
+        for (Orders orderAndConsumer : orderAndConsumers) {
+            System.out.println(orderAndConsumer);
+
+        }
     }
 }

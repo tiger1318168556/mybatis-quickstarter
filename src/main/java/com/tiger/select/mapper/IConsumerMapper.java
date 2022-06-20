@@ -26,5 +26,8 @@ public interface IConsumerMapper {
     public List<Consumer> selectConsumer();
     @Delete("delete from consumer where consumerid =#{consumerid}")
     public void deleteConsumer(Integer id);
+    //根据id查询用户
+    @Select("select * from consumer where consumerid=#{consumerid}")
+    public Consumer findConsumerById(Integer id);
 
 }
