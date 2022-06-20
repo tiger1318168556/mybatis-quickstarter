@@ -28,11 +28,12 @@ public class TestZhuJie {
     private IOrderMapper orderMapper;
     private IUserDao userDao;
     private SqlSession sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
     @Before
     public void before() throws IOException {
         InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
-        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
         sqlSession = sqlSessionFactory.openSession(false);
         consumerMapper = sqlSession.getMapper(IConsumerMapper.class);
         orderMapper = sqlSession.getMapper(IOrderMapper.class);
@@ -89,5 +90,28 @@ public class TestZhuJie {
         //没有：查询数据库，同时将查询出来的数据结果存放到一级缓存中
         Consumer consumerById1 = consumerMapper.findConsumerById(1);
         System.out.println(consumerById==consumerById1);
+    }
+
+    @Test
+    public void secondCacheLevelTest(){
+        SqlSession sqlSession1 = sqlSessionFactory.openSession();
+        SqlSession sqlSession2 = sqlSessionFactory.openSession();
+        SqlSession sqlSession3 = sqlSessionFactory.openSession();
+        IConsumerMapper mapper1 = sqlSession1.getMapper(IConsumerMapper.class);
+        IConsumerMapper mapper2 = sqlSession2.getMapper(IConsumerMapper.class);
+        IConsumerMapper mapper3 = sqlSession3.getMapper(IConsumerMapper.class);
+        Consumer consumerById1 = mapper1.findConsumerById(1);
+        sqlSession1.close();//清空一级缓存
+        //更新操作
+        Consumer consumer = new Consumer();
+        consumer.setConsumerid(1);
+        consumer.setConsumername("夏栀");
+        mapper3.updateConsumer(consumer);
+        sqlSession3.commit();//清空二级缓存
+        Consumer consumerById2 = mapper2.findConsumerById(1);
+        System.out.println(consumerById1 == consumerById2);//false 二级缓存缓存的是对象中的数据，并不是对象，在第二去查询对象时，为我们重新创建了一个consumer对象
+        //并且把二级缓存中提前缓存好的数据重新封装成这个对象
+
+
     }
 }

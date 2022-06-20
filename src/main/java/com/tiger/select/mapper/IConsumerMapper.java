@@ -11,6 +11,7 @@ import java.util.List;
  * @Description:com.tiger.select.mapper
  * @Version:1.0
  **/
+@CacheNamespace //开启二级缓存
 public interface IConsumerMapper {
     //#查询出全部用户信息以及每个用户对应的订单信息
     public List<Consumer> findAll();
@@ -24,6 +25,7 @@ public interface IConsumerMapper {
     @Delete("delete from consumer where consumerid =#{consumerid}")
     public void deleteConsumer(Integer id);
     //根据id查询用户
+    @Options(useCache = false)//默认true
     @Select("select * from consumer where consumerid=#{consumerid}")
     public Consumer findConsumerById(Integer id);
     @Select("select * from consumer")

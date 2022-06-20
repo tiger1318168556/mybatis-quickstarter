@@ -1,5 +1,6 @@
 package com.tiger.select.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @Description:com.tiger.select.bean
  * @Version:1.0
  **/
-public class Consumer {
+public class Consumer implements Serializable {
     private Integer consumerid;
     private String consumername;
     private String consumerpwd;
