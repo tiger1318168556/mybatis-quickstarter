@@ -16,7 +16,7 @@ import java.util.List;
  * @Version:1.0
  **/
 public interface IOrderMapper {
-    //查询订单的同时还查询该订单所属的用户
+    //查询订单的同时还查询该订单所属的用户 配置文件
     public List<Orders> findOrderAndConsumer();
 
     /**
@@ -29,4 +29,6 @@ public interface IOrderMapper {
     @Result(property = "consumer",column = "consumerid",javaType = Consumer.class,one=@One(select = "com.tiger.select.mapper.IConsumerMapper.findConsumerById"))})
     @Select("select * from orders")
     public List<Orders> findOrderAndConsumers();
+    @Select("select * from orders where consumerid=#{consumerId}")
+    public List<Orders> findOrderByConsumerId(Integer consumerId);
 }

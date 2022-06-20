@@ -1,5 +1,7 @@
 package com.tiger.test;
 
+import com.tiger.bean.User;
+import com.tiger.dao.IUserDao;
 import com.tiger.select.bean.Consumer;
 import com.tiger.select.bean.Orders;
 import com.tiger.select.mapper.IConsumerMapper;
@@ -24,13 +26,17 @@ import java.util.List;
 public class TestZhuJie {
     private IConsumerMapper consumerMapper;
     private IOrderMapper orderMapper;
+    private IUserDao userDao;
+    private SqlSession sqlSession;
+
     @Before
     public void before() throws IOException {
         InputStream resourceAsStream = Resources.getResourceAsStream("sqlMapConfig.xml");
         SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
-        SqlSession sqlSession = sqlSessionFactory.openSession(true);
+        sqlSession = sqlSessionFactory.openSession(false);
         consumerMapper = sqlSession.getMapper(IConsumerMapper.class);
         orderMapper = sqlSession.getMapper(IOrderMapper.class);
+        userDao = sqlSession.getMapper(IUserDao.class);
     }
     @Test
     public void addConsumer(){
@@ -47,7 +53,41 @@ public class TestZhuJie {
         List<Orders> orderAndConsumers = orderMapper.findOrderAndConsumers();
         for (Orders orderAndConsumer : orderAndConsumers) {
             System.out.println(orderAndConsumer);
-
         }
+    }
+
+    @Test//测试注解开发
+    public void test2OneToManyZhuJie() throws IOException {
+        List<Consumer> all2 = consumerMapper.findAll2();
+        for (Consumer consumer : all2) {
+            System.out.println(consumer);
+        }
+    }
+    @Test//测试注解开发
+    public void test2ManyToManyZhuJie() throws IOException {
+        List<User> allUserAndRole2 = userDao.findAllUserAndRole2();
+        for (User user : allUserAndRole2) {
+            System.out.println(user);
+        }
+    }
+    //MyBatis缓存
+    @Test
+    public void testFirstLevelCache(){
+        //第一次查询id为1 的客户 首先是去一级缓存中查询，有：直接返回
+        //没有：查询数据库，同时将查询出的结果存到一级缓存中
+        Consumer consumerById = consumerMapper.findConsumerById(1);
+        //更新consumer,对以及缓存进行刷新
+        //结论：做增删改操作，并进行了事务提交，就是刷新一级缓存
+        Consumer consumer =new Consumer();
+        consumer.setConsumerid(1);
+        consumer.setConsumername("波多野结衣");
+        consumerMapper.updateConsumer(consumer);
+        sqlSession.commit();
+        sqlSession.clearCache();//清空一级缓存，手动刷新缓存
+        //第二次查询id为1 的客户
+        //首先是去一级缓存中查询数据，有：直接返回
+        //没有：查询数据库，同时将查询出来的数据结果存放到一级缓存中
+        Consumer consumerById1 = consumerMapper.findConsumerById(1);
+        System.out.println(consumerById==consumerById1);
     }
 }

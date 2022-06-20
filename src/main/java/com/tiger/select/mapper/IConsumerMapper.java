@@ -1,10 +1,7 @@
 package com.tiger.select.mapper;
 
 import com.tiger.select.bean.Consumer;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -29,5 +26,14 @@ public interface IConsumerMapper {
     //根据id查询用户
     @Select("select * from consumer where consumerid=#{consumerid}")
     public Consumer findConsumerById(Integer id);
+    @Select("select * from consumer")
+    @Results({@Result(property = "consumerid",column = "consumerid"),
+            @Result(property = "consumername",column ="consumername" ),
+            @Result(property = "consumerpwd",column ="consumerpwd" ),
+            @Result(property = "birthday",column = "birthday"),
+            @Result(property = "orderList",column = "consumerid",javaType = List.class,many = @Many(select = "com.tiger.select.mapper.IOrderMapper.findOrderByConsumerId"))
+    })
+    public List<Consumer> findAll2();
+
 
 }

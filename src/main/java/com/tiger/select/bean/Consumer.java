@@ -1,5 +1,6 @@
 package com.tiger.select.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class Consumer {
     private String consumerpwd;
     private String birthday;
     //该用户所具有的订单信息
-    private List<Orders> orderList;
+    private List<Orders> orderList = new ArrayList<>();
 
     public List<Orders> getOrderList() {
         return orderList;
@@ -63,6 +64,7 @@ public class Consumer {
                 ", consumername='" + consumername + '\'' +
                 ", consumerpwd='" + consumerpwd + '\'' +
                 ", birthday='" + birthday + '\'' +
+                ", orderList=" + orderList +
                 '}';
     }
 }

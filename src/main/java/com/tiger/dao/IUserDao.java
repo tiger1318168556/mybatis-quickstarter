@@ -2,6 +2,10 @@ package com.tiger.dao;
 
 import com.tiger.bean.User;
 import com.tiger.select.bean.Role;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -26,5 +30,11 @@ public interface IUserDao {
     public List<User> findByIds(int [] ids) throws Exception;
     //#查询用户以及对应的角色
     public List<User> findAllUserAndRole();
+
+    @Select("select * from user")
+    @Results({@Result(property = "id",column = "id"),
+            @Result(property = "username",column = "username"),
+            @Result(property = "roleList",column = "id",javaType = List.class,many = @Many(select="com.tiger.dao.IRoleMapper.findRoleByUserId"))})
+    public List<User> findAllUserAndRole2();
 
 }

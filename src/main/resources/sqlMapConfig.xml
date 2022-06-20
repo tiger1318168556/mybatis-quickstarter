@@ -38,6 +38,7 @@
         <mapper class="com.tiger.dao.IUserDao"></mapper>
         <mapper class="com.tiger.select.mapper.IConsumerMapper"></mapper>
         <mapper class="com.tiger.select.mapper.IOrderMapper"></mapper>
+        <mapper class="com.tiger.dao.IRoleMapper"></mapper>
     </mappers>
 
 </configuration>
