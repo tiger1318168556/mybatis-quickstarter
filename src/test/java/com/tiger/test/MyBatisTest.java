@@ -21,13 +21,17 @@ import java.util.List;
 public class MyBatisTest {
     @Test
     public void test() throws IOException {
-        //1、Resources工具类，配置文件的加载，把配置文件加载成字节输入流
+        //1、Resources工具类，配置文件的加载，把配置文件加载成字节输入流，现在还没解析
         InputStream in = Resources.getResourceAsStream("sqlMapConfig.xml");
         //2 解析了配置文件，并创建了sqlSessionFactory工厂
+        //解析配文件，封装Configuration对象，创建DefaultSqlSessionFactory对象
         SqlSessionFactory build = new SqlSessionFactoryBuilder().build(in);
         //3 生产sqlSession
+        //产生了DefaultSqlSession实例对象，设置了事务不自动提交，完成了executor对象的创建
         SqlSession sqlSession = build.openSession();//默认开启一个事务，但是事务不会自动提交，所有在增删改操作时要手动提交事务
         //4 sqlSession 调用方法 查询所有 selectList 查询单个
+        //4.1根据statementid来从Configuration中map集合中获取到了指定的MappedStatement对象
+        //4.2将查询任务委派给了executor执行器
         List<User> users = sqlSession.selectList("com.tiger.dao.IUserDao.findAll");
         for (User user : users) {
             System.out.println(user);
@@ -73,6 +77,7 @@ public class MyBatisTest {
         InputStream in = Resources.getResourceAsStream("sqlMapConfig.xml");
         SqlSessionFactory build = new SqlSessionFactoryBuilder().build(in);
         SqlSession sqlSession = build.openSession();
+        //使用JDK动态代理，对mapper接口产生代理对象
         IUserDao mapper = sqlSession.getMapper(IUserDao.class);
         List<User> all = mapper.findAll();
         for (User user : all) {

@@ -17,6 +17,12 @@
         <package name="com.tiger.bean"/>
         <package name="com.tiger.select.bean"/>
     </typeAliases>
+    <plugins>
+        <plugin interceptor="com.tiger.plugin.MyPlugin">
+            <!--配置插件参数-->
+            <property name="name" value="plugin tiger"/>
+        </plugin>
+    </plugins>
     <!--environments:运行环境-->
 <environments default="development">
     <environment id="development">

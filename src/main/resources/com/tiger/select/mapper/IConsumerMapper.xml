@@ -23,4 +23,5 @@
     select c.*,o.orderid,o.ordertime,o.orderid oid,o.total,o.consumerid cid
     from consumer c left join orders o on o.consumerid = c.consumerid
 </select>
+
 </mapper>

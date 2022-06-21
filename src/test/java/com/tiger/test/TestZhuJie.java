@@ -102,6 +102,7 @@ public class TestZhuJie {
         IConsumerMapper mapper3 = sqlSession3.getMapper(IConsumerMapper.class);
         Consumer consumerById1 = mapper1.findConsumerById(1);
         sqlSession1.close();//清空一级缓存
+        //sqlSession1.commit();
         //更新操作
         Consumer consumer = new Consumer();
         consumer.setConsumerid(1);
